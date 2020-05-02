@@ -142,6 +142,7 @@ def check_word(f_guess, f_word, f_fail_count, f_correct, f_incorrect, f_play):
                         else:
                             print("_ ", end = " ")
                     print(" ")
+                    print(szubienica[f_fail_count])
             # zgadywanej litery nie ma w słowie
             else:
                 f_incorrect.append(f_guess)
@@ -216,4 +217,4 @@ def main():
     return 0
 
 
-main()
+if __name__=='__main__' : main()
