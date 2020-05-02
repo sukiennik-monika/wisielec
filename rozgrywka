@@ -174,6 +174,7 @@ def main():
     # no_rep_word = no_rep(word)
     correct = []
     incorrect = []
+    clue_index_list = []
     play = True
     fail_count = 0
     # guess_count = 0        EW. DO STATYSTYK
@@ -191,16 +192,21 @@ def main():
             answer = input("Czy chcesz skorzystać z podpowiedzi? (*/n): ")
             if answer == "*":
                 # losowanie indeksu litery w słowie:
-                clue_index = random.randint(0, len(word) - 1)
-                check_word(word[clue_index], word, fail_count, correct, incorrect, play)  # FUNKCJA CZY W SŁOWIE
-                star_count -= 1
-                clue = True
+                while not clue:
+                    clue_index = random.randint(0, len(word) - 1)
+                    if clue_index not in clue_index_list:
+                        clue_index_list.append(clue_index)
+                        check_word(word[clue_index], word, fail_count, correct, incorrect, play)  # funkcja czy w słowie
+                        star_count -= 1
+                        clue = True
             elif answer == "n":
                 clue = False
             else:
                 print("Podaj '*' lub 'n'.")
                 print("-" * 30)
                 clue = True
+        else:
+            print("Skończyły Ci się podpowiedzi!")
 
         # CIĄG DALSZY
         if clue is False:
