@@ -1,0 +1,219 @@
+import random
+
+
+# słownik z modelami szubienicy
+szubienica = {
+
+    0: """
+    _ _ _ _ _
+    |       |
+    |
+    |  
+    |
+    |
+    |
+    |_ _ _ _ _ _ """,
+
+    1: """
+    _ _ _ _ _
+    |       |
+    |       O
+    |  
+    |
+    |
+    |
+    |_ _ _ _ _ _ """,
+
+    2: """
+    _ _ _ _ _
+    |       | 
+    |       O
+    |       | 
+    |
+    |
+    |
+    |_ _ _ _ _ _ """,
+
+    3: """
+    _ _ _ _ _
+    |       | 
+    |       O
+    |     / | 
+    |
+    |
+    |
+    |_ _ _ _ _ _ """,
+
+    4: """
+    _ _ _ _
+    |       | 
+    |       O
+    |     / | \\
+    |
+    |
+    |
+    |_ _ _ _ _ _ """,
+
+    5: """
+    _ _ _ _
+    |       | 
+    |       O
+    |     / | \\
+    |       |
+    |
+    |
+    |_ _ _ _ _ _ """,
+
+    6: """
+    _ _ _ _
+    |       | 
+    |       O
+    |     / | \\
+    |       |
+    |      |
+    |
+    |_ _ _ _ _ _ """,
+
+    7: """
+    _ _ _ _
+    |       | 
+    |       O
+    |     / | \\
+    |       |
+    |      | |
+    |
+    |_ _ _ _ _ _ """,
+
+    8: """
+    _ _ _ _
+    |       | 
+    |       O
+    |     / | \\
+    |       |
+    |      | |
+    |      |
+    |_ _ _ _ _ _ """,
+
+    9: """
+    _ _ _ _
+    |       | 
+    |       O
+    |     / | \\
+    |       |
+    |      | |
+    |      | |
+    |_ _ _ _ _ _ """
+
+}
+
+
+# funkcja, która sprawdza, czy litera jest w słowie
+def check_word(f_guess, f_word, f_fail_count, f_correct, f_incorrect, f_play):
+
+    # jesli gracz odgadnął zadane słowo:
+    if f_guess == f_word:
+        print(f_word)                       # DODAĆ UPPER
+        print("Gratulacje - przeżyłeś!")
+        f_play = False                      # KONIEC GRY
+
+    # jeśli gracz wprowadził jedną literę:
+    elif len(f_guess) == 1:
+
+        # jeśli już wcześniej próbował odgadnąć tę literę:
+        if f_guess in (f_correct or f_incorrect):
+            print("Już próbowałeś odgadnąć tę literę, spróbuj innaczej")
+
+        # litera została wprowadzona po raz pierwszy
+        else:
+            # zgadywana litera jest w słowie
+            if f_guess in f_word:
+                f_correct.append(f_guess)
+                # sprawdzenie czy odgadnięta litera sprawia, że odgadnięte zostało całe słowo
+                # w zbiorach kolejność nie ma znaczenia oraz elementy się nie powtarzają, stąd rzutowanie
+                if set(f_word) == set(f_correct):
+                    print(f_word)
+                    print("Gratulacje - przeżyłeś!")
+                    f_play = False
+                else:
+                    print("Dobrze, co raz mniej do zgadywania!")
+                    for letter in f_word:
+                        if letter in f_correct:
+                            print(letter, end = " ")
+                        else:
+                            print("_ ", end = " ")
+                    print(" ")
+            # zgadywanej litery nie ma w słowie
+            else:
+                f_incorrect.append(f_guess)
+                f_fail_count += 1
+                print("Tej litery nie ma w Twoim słowie!")
+                print(szubienica[f_fail_count])
+
+    # gracz wprowadził kilka liter, ale nie są one zadanym słowem
+    else:
+        # jeśli już próbował odgadnąć taką kombinację
+        if f_guess in (f_correct or f_incorrect):
+            print("Już próbowałeś odgadnąć to słowo, spróbuj inaczej")
+        else:
+            f_incorrect.append(f_guess)
+            f_fail_count += 1
+            print("To nie to słowo!")
+            print(szubienica[f_fail_count])
+
+    # wypisanie liter, które były już poprzednio zgadywane:
+    print("\nTu pojawiają się podane przez Ciebie litery, których nie ma w zgadywanym słowie: ", ", ".join(f_incorrect))
+    print("-" * 100)
+
+    return f_fail_count, f_correct, f_incorrect, f_play
+
+
+def main():
+    star_count = 3
+    word = "żółć"
+    # no_rep_word = no_rep(word)
+    correct = []
+    incorrect = []
+    play = True
+    fail_count = 0
+    # guess_count = 0        EW. DO STATYSTYK
+    print("Słowo, które musisz odgadnąć:")
+    for underscore in word:
+        print("_ ", end=" ")
+    print(" ")
+
+    while (play is True) and (fail_count < 9):
+
+        # FUNKCJONALNOŚĆ - GWIAZDKA = PODPOWIEDŹ
+        clue = False
+        if star_count > 0:
+            print("Pozostałe podpowiedzi: " + ("* " * star_count))
+            answer = input("Czy chcesz skorzystać z podpowiedzi? (*/n): ")
+            if answer == "*":
+                # losowanie indeksu litery w słowie:
+                clue_index = random.randint(0, len(word) - 1)
+                check_word(word[clue_index], word, fail_count, correct, incorrect, play)  # FUNKCJA CZY W SŁOWIE
+                star_count -= 1
+                clue = True
+            elif answer == "n":
+                clue = False
+            else:
+                print("Podaj '*' lub 'n'.")
+                print("-" * 30)
+                clue = True
+
+        # CIĄG DALSZY
+        if clue is False:
+            guess = input("Zgadnij literę lub słowo: ")
+            result = check_word(guess, word, fail_count, correct, incorrect, play)
+            play = result[3]
+            fail_count = result[0]
+
+    if fail_count == 9:
+        print("Przegrałeś!")
+    else:
+        print("Udało Ci się!")
+
+    return 0
+
+
+main()
