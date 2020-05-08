@@ -206,6 +206,7 @@ def main():
                         clue_index_list.append(clue_index)
                         check_word(word[clue_index], word, fail_count, correct, incorrect, play, clue_index_list)  # funkcja czy w słowie
                         star_count -= 1
+                        play = result[3]
                         clue = True
             elif answer == "n":
                 clue = False
@@ -225,8 +226,8 @@ def main():
             result = check_word(guess, word, fail_count, correct, incorrect, play, clue_index_list)
             play = result[3]
             fail_count = result[0]
-            correct = result[1]
-            incorrect = result[2]
+            correct = result[1]             #nie musi w sumie tego być
+            incorrect = result[2]           #nie musi w sumie tego być
 
     if fail_count == 9:
         print("Przegrałeś!")
