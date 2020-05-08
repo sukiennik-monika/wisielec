@@ -108,7 +108,7 @@ szubienica = {
 
 
 # funkcja, która sprawdza, czy litera jest w słowie
-def check_word(f_guess, f_word, f_fail_count, f_correct, f_incorrect, f_play):
+def check_word(f_guess, f_word, f_fail_count, f_correct, f_incorrect, f_play, f_clue_index_list):
 
     # jesli gracz odgadnął zadane słowo:
     if f_guess == f_word:
@@ -120,21 +120,21 @@ def check_word(f_guess, f_word, f_fail_count, f_correct, f_incorrect, f_play):
     elif len(f_guess) == 1:
 
         # jeśli już wcześniej próbował odgadnąć tę literę:
-        if f_guess in (f_correct or f_incorrect):
-            print("Już próbowałeś odgadnąć tę literę, spróbuj innaczej")
+        if f_guess in f_correct or f_guess in f_incorrect:
+            print("Ta litera już była używana, spróbuj innaczej")
 
         # litera została wprowadzona po raz pierwszy
         else:
             # zgadywana litera jest w słowie
             if f_guess in f_word:
                 f_correct.append(f_guess)
+                f_clue_index_list.append(f_word.index(f_guess))
                 # sprawdzenie czy odgadnięta litera sprawia, że odgadnięte zostało całe słowo
                 # w zbiorach kolejność nie ma znaczenia oraz elementy się nie powtarzają, stąd rzutowanie
                 if set(f_word) == set(f_correct):
                     print(f_word)
                     print("Gratulacje - przeżyłeś!")
                     f_play = False
-                    # w tym przypadku po wygraniu dalej pojawia się komunikat o literach i słowach, które się już zużyło
                 else:
                     print("Dobrze, co raz mniej do zgadywania!")
                     #jeśli Ci się uda to zrobiłbym rozróżnienie  komunikatu,
@@ -158,7 +158,7 @@ def check_word(f_guess, f_word, f_fail_count, f_correct, f_incorrect, f_play):
     # gracz wprowadził kilka liter, ale nie są one zadanym słowem
     else:
         # jeśli już próbował odgadnąć taką kombinację
-        if f_guess in (f_correct or f_incorrect):
+        if f_guess in f_correct or f_guess in f_incorrect:
             print("Już próbowałeś odgadnąć to słowo, spróbuj inaczej")
         else:
             f_incorrect.append(f_guess)
@@ -167,8 +167,8 @@ def check_word(f_guess, f_word, f_fail_count, f_correct, f_incorrect, f_play):
             print(szubienica[f_fail_count])
 
     # wypisanie liter, które były już poprzednio zgadywane:
-    print("\nTu pojawiają się podane przez Ciebie litery, których nie ma w zgadywanym słowie: ", ", ".join(f_incorrect))
-    #tu pojawiają się litery, ale też hasła, które próbowało się zgadnąć, więc warto to uwzględnić w komunikacie
+    if f_play:
+        print("\nTu pojawiają się podane przez Ciebie błędne litery i słowa: ", ", ".join(f_incorrect))
     print("-" * 100)
 
     return f_fail_count, f_correct, f_incorrect, f_play
@@ -178,7 +178,6 @@ def main():
     star_count = 3
     #(dostosować do poziomów trudności odpowiednią ilość, po złączeniu plików- pewnie jako argument funkcji- ale to później)
     word = "żółć"
-    # no_rep_word = no_rep(word)
     correct = []
     incorrect = []
     clue_index_list = []
@@ -205,7 +204,7 @@ def main():
                     clue_index = random.randint(0, len(word) - 1)
                     if clue_index not in clue_index_list:
                         clue_index_list.append(clue_index)
-                        check_word(word[clue_index], word, fail_count, correct, incorrect, play)  # funkcja czy w słowie
+                        check_word(word[clue_index], word, fail_count, correct, incorrect, play, clue_index_list)  # funkcja czy w słowie
                         star_count -= 1
                         clue = True
             elif answer == "n":
@@ -223,9 +222,11 @@ def main():
         # CIĄG DALSZY
         if clue is False:
             guess = input("Zgadnij literę lub słowo: ")
-            result = check_word(guess, word, fail_count, correct, incorrect, play)
+            result = check_word(guess, word, fail_count, correct, incorrect, play, clue_index_list)
             play = result[3]
             fail_count = result[0]
+            correct = result[1]
+            incorrect = result[2]
 
     if fail_count == 9:
         print("Przegrałeś!")
