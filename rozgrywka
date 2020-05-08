@@ -134,8 +134,9 @@ def check_word(f_guess, f_word, f_fail_count, f_correct, f_incorrect, f_play):
                     print(f_word)
                     print("Gratulacje - przeżyłeś!")
                     f_play = False
+                    # w tym przypadku po wygraniu dalej pojawia się komunikat o literach i słowach, które się już zużyło
                 else:
-                    print("Dobrze, co raz mniej do zgadywania!") 
+                    print("Dobrze, co raz mniej do zgadywania!")
                     #jeśli Ci się uda to zrobiłbym rozróżnienie  komunikatu,
                     #tj dla odgadniętej jest ten komunikat, ale jeśli ktoś użył gwiazdki, to dostaje komunikat w stylu:
                     #'Oto twoja podpowiedź" czy coś. Chodzi mi o to, żeby po użyciu gwiazdki gracz nie dostawał
@@ -174,8 +175,8 @@ def check_word(f_guess, f_word, f_fail_count, f_correct, f_incorrect, f_play):
 
 
 def main():
-    star_count = 3      
-    #(dostosować do poziomów trudności odpowiednią ilość, po złączeniu plików)
+    star_count = 3
+    #(dostosować do poziomów trudności odpowiednią ilość, po złączeniu plików- pewnie jako argument funkcji- ale to później)
     word = "żółć"
     # no_rep_word = no_rep(word)
     correct = []
@@ -195,8 +196,8 @@ def main():
         clue = False
         if star_count > 0:
             print("Pozostałe podpowiedzi: " + ("* " * star_count))
-            answer = input("Czy chcesz skorzystać z podpowiedzi? (*/n): ")  
-            #zamieniłbym na: jeśli chcesz skorzystać z gwiazdki, wprowadź (np) znak 
+            answer = input("Czy chcesz skorzystać z podpowiedzi? (*/n): ")
+            #zamieniłbym na: jeśli chcesz skorzystać z gwiazdki, wprowadź (np) znak
             # kropki- tak żeby nie musieć za każdym razem dawań n, kiedy sie nie chce
             if answer == "*":
                 # losowanie indeksu litery w słowie:
@@ -215,6 +216,9 @@ def main():
                 clue = True
         else:
             print("Skończyły Ci się podpowiedzi!")
+            #WAŻNE jeśli rozegrasz grę tak, żeby w momencie wygranej skończyły Ci się wszystkie gwaizdki, tj twoja ostatnia
+            #litera zostaje odsłonięta dzięki gwiazdce to gra się nie kończy- wyświetla się komunikat o braku gwiazdek i gra
+            #trwa dalej pomimo tego że hasło już zostało zgadnięte. Muszisz pokombinować z tymi elif, else if itd.
 
         # CIĄG DALSZY
         if clue is False:
