@@ -8,7 +8,7 @@ szubienica = {
     _ _ _ _ _
     |       |
     |
-    |  
+    |
     |
     |
     |
@@ -18,7 +18,7 @@ szubienica = {
     _ _ _ _ _
     |       |
     |       O
-    |  
+    |
     |
     |
     |
@@ -26,9 +26,9 @@ szubienica = {
 
     2: """
     _ _ _ _ _
-    |       | 
+    |       |
     |       O
-    |       | 
+    |       |
     |
     |
     |
@@ -36,9 +36,9 @@ szubienica = {
 
     3: """
     _ _ _ _ _
-    |       | 
+    |       |
     |       O
-    |     / | 
+    |     / |
     |
     |
     |
@@ -46,7 +46,7 @@ szubienica = {
 
     4: """
     _ _ _ _
-    |       | 
+    |       |
     |       O
     |     / | \\
     |
@@ -56,7 +56,7 @@ szubienica = {
 
     5: """
     _ _ _ _
-    |       | 
+    |       |
     |       O
     |     / | \\
     |       |
@@ -66,7 +66,7 @@ szubienica = {
 
     6: """
     _ _ _ _
-    |       | 
+    |       |
     |       O
     |     / | \\
     |       |
@@ -76,7 +76,7 @@ szubienica = {
 
     7: """
     _ _ _ _
-    |       | 
+    |       |
     |       O
     |     / | \\
     |       |
@@ -86,7 +86,7 @@ szubienica = {
 
     8: """
     _ _ _ _
-    |       | 
+    |       |
     |       O
     |     / | \\
     |       |
@@ -96,7 +96,7 @@ szubienica = {
 
     9: """
     _ _ _ _
-    |       | 
+    |       |
     |       O
     |     / | \\
     |       |
@@ -135,7 +135,11 @@ def check_word(f_guess, f_word, f_fail_count, f_correct, f_incorrect, f_play):
                     print("Gratulacje - przeżyłeś!")
                     f_play = False
                 else:
-                    print("Dobrze, co raz mniej do zgadywania!")
+                    print("Dobrze, co raz mniej do zgadywania!") 
+                    #jeśli Ci się uda to zrobiłbym rozróżnienie  komunikatu,
+                    #tj dla odgadniętej jest ten komunikat, ale jeśli ktoś użył gwiazdki, to dostaje komunikat w stylu:
+                    #'Oto twoja podpowiedź" czy coś. Chodzi mi o to, żeby po użyciu gwiazdki gracz nie dostawał
+                    #'pochwały'. Ale jak coś to jest mała rzecz więc jak tak zostanie to też git
                     for letter in f_word:
                         if letter in f_correct:
                             print(letter, end = " ")
@@ -163,13 +167,15 @@ def check_word(f_guess, f_word, f_fail_count, f_correct, f_incorrect, f_play):
 
     # wypisanie liter, które były już poprzednio zgadywane:
     print("\nTu pojawiają się podane przez Ciebie litery, których nie ma w zgadywanym słowie: ", ", ".join(f_incorrect))
+    #tu pojawiają się litery, ale też hasła, które próbowało się zgadnąć, więc warto to uwzględnić w komunikacie
     print("-" * 100)
 
     return f_fail_count, f_correct, f_incorrect, f_play
 
 
 def main():
-    star_count = 3
+    star_count = 3      
+    #(dostosować do poziomów trudności odpowiednią ilość, po złączeniu plików)
     word = "żółć"
     # no_rep_word = no_rep(word)
     correct = []
@@ -189,7 +195,9 @@ def main():
         clue = False
         if star_count > 0:
             print("Pozostałe podpowiedzi: " + ("* " * star_count))
-            answer = input("Czy chcesz skorzystać z podpowiedzi? (*/n): ")
+            answer = input("Czy chcesz skorzystać z podpowiedzi? (*/n): ")  
+            #zamieniłbym na: jeśli chcesz skorzystać z gwiazdki, wprowadź (np) znak 
+            # kropki- tak żeby nie musieć za każdym razem dawań n, kiedy sie nie chce
             if answer == "*":
                 # losowanie indeksu litery w słowie:
                 while not clue:
