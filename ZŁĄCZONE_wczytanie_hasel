@@ -1,0 +1,48 @@
+# -*- coding: windows-1250 -*-
+from itertools import islice
+import random
+
+def choosing_cat(file):
+    category = 0
+    start = 0
+    category = input("Wybierz kategorię hasła: 1 - AGH; 2 - Przyroda; 3 - Sztuka i muzyka; 4 - Język polski; 5 - Sport\n")
+    while category not in ["1", "2", "3", "4", "5"]:
+        print("Kategoria nie została wybrana\n")
+        category = input("Wybierz kategorię hasła: 1 - AGH; 2 - Przyroda; 3 - Sztuka i muzyka; 4 - Język polski; 5 - Sport\n")
+    for i in range (int(category)-1):
+        start+=6
+    stop = start + 5
+    with open(file) as open_file:
+        words = []
+        for line in islice(open_file,start,stop):
+            words.append(line)
+        choosing_word = random.choice(words)
+        return ("".join(choosing_word))
+
+def getting_stars(level):
+    star_count = int(level)
+    return star_count
+
+def load_word():
+    nick = input("Podaj imię gracza\n")
+    level = 0
+
+    while level not in ["1", "2", "3"]:
+        level = input("Wybierz poziom trudności: 1 - łatwy; 2 - średni; 3 - trudny;\n")
+        if level == "1":
+            word = choosing_cat('latwy.txt')
+            print("Wybrano poziom łatwy")
+            print(word)
+        elif level == "2":
+            word = choosing_cat('sredni.txt')
+            print("Wybrano poziom średni")
+            print(word)
+        elif level == "3":
+            word = choosing_cat('trudny.txt')
+            print("Wybrano poziom trudny")
+            print(word)
+        else:
+            print("Poziom trudności nie został wybrany\n")
+    stars_given = getting_stars(level)
+    print("Ilość przydzielonych gwiazdek:", stars_given)
+    return(word.lower(),stars_given)
