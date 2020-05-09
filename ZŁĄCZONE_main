@@ -1,0 +1,47 @@
+# -*- coding: windows-1250 -*-
+import os
+import wczytanie_hasel
+import mechanizm_gry
+
+
+clear = lambda: os.system('cls')  #IDLE nie czysci, terminal tak, do ustalnia co robimy// metoda z len(str)
+
+def main():
+    number=" "
+    while (number != "0"):
+        print("\n\n-------------------------MENU GŁÓWNE-------------------------")
+        print(" 1- Nowa gra\n","2- Wczytaj grę\n","3- Statystki\n","4- Zasady gry\n","0- Wyjdź")
+        number=str(input())
+        if number == "1":       #nowa gra
+            word_star=wczytanie_hasel.load_word() #funkcja zwraca krotkę (slowo,ilosc gwiazdek)
+            word= word_star[0]
+            star= word_star[1]
+            mechanizm_gry.game(word, star)        #przekazuje wylosowane slowo i ilosc gwaizdek- TU ODBYWA SIĘ GRA
+
+
+        elif number == "2":     #wczytaj gre
+            print("uzupelnic")
+
+
+            #wczytaj gre - WOJTEK
+
+
+        elif number == "3":      #statystki
+            print("uzupelnic")
+
+            #statystyka BARTEK KIEDYS TAM
+
+
+
+        elif number == "4":
+            print("\nZASADY GRY: \n",\
+"1. Wymyślę słowo z wybranej przez Ciebie kategorii i na ekranie wyświetlę tyle kresek,\n\tz ilu liter się ono składa. Twoim zadaniem jest je odgadnąć literka po literce.\n"\
+,"2. Jeśli trafisz - litera pojawi się w odpowiednim miejscu zamiast kreski. Jeśli trafisz taką, \n\tktóra w słowie występuje w kilku miejscach - w jednym kroku pojawi się ona na każdym z nich. \n\tWygrywasz, kiedy uda Ci się odgadnąć całe słowo.\n"\
+,"3. Musisz jednak uważać - w rogu, z każdą nieudaną próbą odgadnięcia litery,\n\tpojawia się kolejna część rysunku szubienicy. Jeśli przekroczysz dozwoloną liczbę prób - zawiśniesz!\n\tNie dopuść do tego.")
+            print("Wprowadź dowolny znak aby wrócić do głównego menu")
+            str(input())
+            clear()
+        elif number != "0":
+            print("Nieprawidłowy znak")
+
+if __name__=='__main__' : main()
