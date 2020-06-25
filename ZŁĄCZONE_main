@@ -20,10 +20,8 @@ def main():
 
 
         elif number == "2":     #wczytaj gre
-            print("uzupelnic")
-
-
-            #wczytaj gre - WOJTEK
+            profil = wczytanie_gry.wybor_profilu()
+            wczytanie_gry.game_save(profil[0],profil[1],profil[2],profil[3], profil[4])
 
 
         elif number == "3":      #statystki
