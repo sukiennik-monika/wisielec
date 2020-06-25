@@ -23,12 +23,16 @@ def your_stats(player = 'Player2'):
     data.columns = ["Imię", "Ilość rozegranych gier", "Ilość odgadniętych słów", "% wygranych gier"
         , "Suma popełnionych błędów", "Średnia ilość błędów na grę", "Punkty"]
     i = 0
-    if player not in data['Imię']:
-        print('Nie rozegrałeś jeszcze żadnych gier- kiedy ukończysz choć jedną grę, twoje statystyki się tu pojawią')
-    else:
-        for name in data['Imię']:
-            if name != player:
-                i += 1
-                continue
-            break
-        print(data.iloc[i, :])
+    for player_loop in data['Imię']:
+        if player == player_loop:
+            for name in data['Imię']:
+                if name != player:
+                    i += 1
+                    continue
+                break
+            print(data.iloc[i, :])
+        else:
+            continue
+    if i == 0 and player != "Player 1":
+        print("Twoje wyniki nie znajdują się jeszcze w bazie danych. Rozegraj choć jeden mecz, a twoje statystki"
+              "się tu pojawią")
