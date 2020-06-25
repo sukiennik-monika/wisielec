@@ -2,11 +2,15 @@
 import os
 import wczytanie_hasel
 import mechanizm_gry
+import wczytanie_gry
+import statystyka as sts
 
 
 clear = lambda: os.system('cls')  #IDLE nie czysci, terminal tak, do ustalnia co robimy// metoda z len(str)
 
 def main():
+    print("Wprowadź swoją nazwę- dzięki niej, będziesz mógł później wczytać grę lub zobaczyć swoje wyniki")
+    player = str(input()) #narazie gracze to "Player X"- za x wstaw 1-8
     number=" "
     while (number != "0"):
         print("\n\n-------------------------MENU GŁÓWNE-------------------------")
@@ -18,26 +22,35 @@ def main():
             star= word_star[1]
             mechanizm_gry.game(word, star)        #przekazuje wylosowane slowo i ilosc gwaizdek- TU ODBYWA SIĘ GRA
 
-
         elif number == "2":     #wczytaj gre
             profil = wczytanie_gry.wybor_profilu()
             wczytanie_gry.game_save(profil[0],profil[1],profil[2],profil[3], profil[4])
 
-
         elif number == "3":      #statystki
-            print("uzupelnic")
+            print("1- Zasady punktacji\n2- Ranking punktów\n3- Szczegółowe statystyki\n4- Twoje statystyki\n"
+                  "POWRÓT DO GŁÓWNEGO MENU- dowolny inny znak")
+            choice = int(input())
+            if choice == 1:
+                print("Punkty są przyznawane według następującego schematu:\n"
+                      "+5pkt za każdą odgadniętą literę\n"
+                      "+25pkt za odgadnięcie hasła\n"
+                      "+20pkt wygranie gry bez użycia żadnej gwaizdki (podpowiedzi)\n\n"
+                      "Dodatkowo obowiązują mnożniki, dopasowane do poziomów trudności:\n"
+                      "Łatwy- x1\nŚredni- x1.5\nTrudny- x2")
 
-            #statystyka BARTEK KIEDYS TAM
-
-
-
+            elif choice == 2:
+                sts.pts_rank()
+            elif choice == 3:
+                sts.adv_stats()
+            elif choice == 4:
+                sts.your_stats(player)
+            else:
+                break
         elif number == "4":
-            print("\nZASADY GRY: \n",\
+            print("\nZASADY GRY: \n",
 "1. Wymyślę słowo z wybranej przez Ciebie kategorii i na ekranie wyświetlę tyle kresek,\n\tz ilu liter się ono składa. Twoim zadaniem jest je odgadnąć literka po literce.\n"\
 ,"2. Jeśli trafisz - litera pojawi się w odpowiednim miejscu zamiast kreski. Jeśli trafisz taką, \n\tktóra w słowie występuje w kilku miejscach - w jednym kroku pojawi się ona na każdym z nich. \n\tWygrywasz, kiedy uda Ci się odgadnąć całe słowo.\n"\
 ,"3. Musisz jednak uważać - w rogu, z każdą nieudaną próbą odgadnięcia litery,\n\tpojawia się kolejna część rysunku szubienicy. Jeśli przekroczysz dozwoloną liczbę prób - zawiśniesz!\n\tNie dopuść do tego.")
-            print("Wprowadź dowolny znak aby wrócić do głównego menu")
-            str(input())
             clear()
         elif number != "0":
             print("Nieprawidłowy znak")
