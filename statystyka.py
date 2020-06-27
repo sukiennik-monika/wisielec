@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
-data = pd.read_csv('C:/Users/Bartek/Desktop/STUDIA/npg/projekt/npg_test.csv',header=1)
+data = pd.read_csv('npg_test.csv',header=1)
 data = data.drop("Unnamed: 0", axis=1)
 data.columns = ["Imię","Ilość rozegranych gier","Ilość odgadniętych słów", "% wygranych gier"
     ,"Suma popełnionych błędów","Średnia ilość błędów na grę","Punkty"]
