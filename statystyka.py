@@ -33,6 +33,7 @@ def your_stats(player = 'Player2'):
             print(data.iloc[i, :])
         else:
             continue
-    if i == 0 and player != "Player 1":
-        print("Twoje wyniki nie znajdują się jeszcze w bazie danych. Rozegraj choć jeden mecz, a twoje statystki"
+    if i == 0 and player != data.iloc[0,0]:
+        print("Twoje wyniki nie znajdują się jeszcze w bazie danych. Rozegraj choć jeden mecz, a twoje statystki "
               "się tu pojawią")
+
