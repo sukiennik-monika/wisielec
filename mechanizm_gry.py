@@ -1,0 +1,282 @@
+# -*- coding: windows-1250 -*-
+import random
+
+# s³ownik z modelami szubienicy
+szubienica = {
+
+    0: """
+    _ _ _ _ _
+    |       |
+    |
+    |
+    |
+    |
+    |
+    |_ _ _ _ _ _ """,
+
+    1: """
+    _ _ _ _ _
+    |       |
+    |       O
+    |
+    |
+    |
+    |
+    |_ _ _ _ _ _ """,
+
+    2: """
+    _ _ _ _ _
+    |       |
+    |       O
+    |       |
+    |
+    |
+    |
+    |_ _ _ _ _ _ """,
+
+    3: """
+    _ _ _ _ _
+    |       |
+    |       O
+    |     / |
+    |
+    |
+    |
+    |_ _ _ _ _ _ """,
+
+    4: """
+    _ _ _ _
+    |       |
+    |       O
+    |     / | \\
+    |
+    |
+    |
+    |_ _ _ _ _ _ """,
+
+    5: """
+    _ _ _ _
+    |       |
+    |       O
+    |     / | \\
+    |       |
+    |
+    |
+    |_ _ _ _ _ _ """,
+
+    6: """
+    _ _ _ _
+    |       |
+    |       O
+    |     / | \\
+    |       |
+    |      |
+    |
+    |_ _ _ _ _ _ """,
+
+    7: """
+    _ _ _ _
+    |       |
+    |       O
+    |     / | \\
+    |       |
+    |      | |
+    |
+    |_ _ _ _ _ _ """,
+
+    8: """
+    _ _ _ _
+    |       |
+    |       O
+    |     / | \\
+    |       |
+    |      | |
+    |      |
+    |_ _ _ _ _ _ """,
+
+    9: """
+    _ _ _ _
+    |       |
+    |       O
+    |     / | \\
+    |       |
+    |      | |
+    |      | |
+    |_ _ _ _ _ _ """
+
+}
+
+alfabet = ['a', '¹', 'b', 'c', 'æ', 'd', 'e', 'ê', 'f', 'g', 'h', 'i', 'j', 'k', 'l', '³', 'm', 'n', 'ñ', 'o', 'ó', 'p', 'r', 's', 'œ', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'Ÿ', '¿']
+
+# funkcja, która sprawdza, czy litera jest w s³owie
+def check_word(f_guess, f_word, f_fail_count, f_correct, f_incorrect, f_play, f_clue_index_list):
+
+    # jesli gracz odgadn¹³ zadane s³owo:
+    if f_guess == f_word:
+        print(f_word.upper())
+        print("Gratulacje - prze¿y³eœ!")
+        f_play = False                      # KONIEC GRY
+
+    # jeœli gracz wprowadzi³ jedn¹ literê:
+    elif len(f_guess) == 1:
+
+        # jeœli ju¿ wczeœniej próbowa³ odgadn¹æ tê literê:
+        if f_guess in f_correct or f_guess in f_incorrect:
+            print("Ta litera ju¿ by³a u¿ywana, spróbuj innaczej.")
+            # wypisanie liter, które by³y ju¿ poprzednio zgadywane:
+            print("\nTu pojawiaj¹ siê podane przez Ciebie b³êdne litery i has³a: ", ", ".join(f_incorrect))
+            print("-" * 100)
+
+        # litera zosta³a wprowadzona po raz pierwszy
+        else:
+            # zgadywana litera jest w s³owie
+            if f_guess in f_word:
+                f_correct.append(f_guess)
+                # nie mo¿na zastosowaæ wbudowanej funkcji .index(), bo zwraca ona indeks pierwszego napotkanego,
+                # znaku, a potrzebujemy indeksu ka¿dej powtarzaj¹cej siê litery
+                i = 0
+                for letter in f_word:
+                    if letter == f_guess:
+                        if i not in f_clue_index_list:
+                            f_clue_index_list.append(i)
+                    i += 1
+                # sprawdzenie czy odgadniêta litera sprawia, ¿e odgadniête zosta³o ca³e s³owo
+                # w zbiorach kolejnoœæ nie ma znaczenia oraz elementy siê nie powtarzaj¹, st¹d rzutowanie
+                if set(f_word) == set(f_correct):
+                    print(f_word)
+                    print("Gratulacje - prze¿y³eœ!")
+                    f_play = False
+
+            # zgadywanej litery nie ma w s³owie
+            else:
+                f_incorrect.append(f_guess)
+                f_fail_count += 1
+                print("Tej litery nie ma w Twoim s³owie!")
+                print(szubienica[f_fail_count])
+                # wypisanie liter, które by³y ju¿ poprzednio zgadywane:
+                print("\nTu pojawiaj¹ siê podane przez Ciebie b³êdne litery i has³a: ", ", ".join(f_incorrect))
+                print("-" * 100)
+
+    # gracz wprowadzi³ kilka liter, ale nie s¹ one zadanym s³owem
+    else:
+        # jeœli ju¿ próbowa³ odgadn¹æ tak¹ kombinacjê
+        if f_guess in f_correct or f_guess in f_incorrect:
+            print("Ju¿ próbowa³eœ odgadn¹æ to s³owo, spróbuj inaczej.")
+        else:
+            f_incorrect.append(f_guess)
+            f_fail_count += 1
+            print("To nie to s³owo!")
+            print(szubienica[f_fail_count])
+            # wypisanie liter, które by³y ju¿ poprzednio zgadywane:
+            print("\nTu pojawiaj¹ siê podane przez Ciebie b³êdne litery i has³a: ", ", ".join(f_incorrect))
+            print("-" * 100)
+
+    return f_fail_count, f_correct, f_incorrect, f_play
+
+
+def game(word_, stars):
+    star_count = stars
+    #(dostosowaæ do poziomów trudnoœci odpowiedni¹ iloœæ, po z³¹czeniu plików- pewnie jako argument funkcji- ale to póŸniej)
+    word = word_[:-1]
+    correct = []
+    incorrect = []
+    clue_index_list = []
+    play = True
+    fail_count = 0
+    # guess_count = 0        EW. DO STATYSTYK
+
+    # dodanie spacji do hase³, które maj¹ wiêcej s³ów
+    if " " in word:
+        correct.append(" ")
+        i = 0
+        for letter in word:
+            if letter == " ":
+                clue_index_list.append(i)
+            i += 1
+
+    while (play is True) and (fail_count < 9):
+
+        # FUNKCJONALNOŒÆ - GWIAZDKA = PODPOWIED
+        clue = False
+        if star_count > 0:
+            print("Twoje has³o:")
+            for letter in word:
+                if letter in correct:
+                    print(letter, end=" ")
+                else:
+                    print("_ ", end=" ")
+            print(" ")
+            print("Pozosta³e podpowiedzi: " + ("* " * star_count))
+            answer = input("Czy chcesz skorzystaæ z gwiazdki? (t/n)")
+            #zamieni³bym na: jeœli chcesz skorzystaæ z gwiazdki, wprowadŸ (np) znak
+            # kropki- tak ¿eby nie musieæ za ka¿dym razem dawañ n, kiedy sie nie chce
+            if answer == "t":
+                # losowanie indeksu litery w s³owie:
+                while not clue:
+                    clue_index = random.randint(0, len(word) - 1)
+                    if clue_index not in clue_index_list:
+                        clue_index_list.append(clue_index)
+                        result_clue= check_word(word[clue_index], word, fail_count, correct, incorrect, play, clue_index_list)  # funkcja czy w s³owie
+                        print("Oto Twoja podpowiedŸ:")
+                        for letter in word:
+                            if letter in correct:
+                                print(letter, end=" ")
+                            else:
+                                print("_ ", end=" ")
+                        print(" ")
+                        print(szubienica[fail_count])
+                        # wypisanie liter, które by³y ju¿ poprzednio zgadywane:
+                        print("\nTu pojawiaj¹ siê podane przez Ciebie b³êdne litery i has³a: ", ", ".join(incorrect))
+                        print("-" * 100)
+                        star_count -= 1
+                        play = result_clue[3]
+                        clue = True
+            elif answer == "n":
+                clue = False
+            else:
+                print("Podaj 't' lub 'n'.")
+                print("-" * 30)
+                clue = True
+        else:
+            print("Twoje has³o:")
+            for letter in word:
+                if letter in correct:
+                    print(letter, end=" ")
+                else:
+                    print("_ ", end=" ")
+            print(" ")
+            print("Skoñczy³y Ci siê podpowiedzi!")
+
+        # CI¥G DALSZY
+        if clue is False:
+            init_correct = len(correct)
+            guess = input("Zgadnij literê lub has³o: ").lower()
+            if guess in alfabet or len(guess) > 1:
+                result = check_word(guess, word, fail_count, correct, incorrect, play, clue_index_list)
+                if init_correct < len(correct):
+                    print("Dobrze, coraz mniej do zgadywania!")
+                    for letter in word:
+                        if letter in correct:
+                            print(letter, end=" ")
+                        else:
+                            print("_ ", end=" ")
+                    print(" ")
+                    print(szubienica[fail_count])
+                    # wypisanie liter, które by³y ju¿ poprzednio zgadywane:
+                    print("\nTu pojawiaj¹ siê podane przez Ciebie b³êdne litery i has³a: ", ", ".join(incorrect))
+                    print("-" * 100)
+                play = result[3]
+                fail_count = result[0]
+                correct = result[1]             #nie musi w sumie tego byæ
+                incorrect = result[2]           #nie musi w sumie tego byæ
+            elif len(guess) == 1:
+                print("Nie podano litery")
+                print("-" * 100)
+
+    if fail_count == 9:
+        print("Przegra³eœ!")
+        print("Twoim has³em by³o: ", word)
+    '''else:
+        print("Uda³o Ci siê!")'''
+
+    return 0
