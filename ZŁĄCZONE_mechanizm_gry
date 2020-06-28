@@ -1,5 +1,6 @@
 # -*- coding: windows-1250 -*-
 import random
+from Projekt_W import zapis_gry
 
 # słownik z modelami szubienicy
 szubienica = {
@@ -108,6 +109,19 @@ szubienica = {
 
 alfabet = ['a', 'ą', 'b', 'c', 'ć', 'd', 'e', 'ę', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'ł', 'm', 'n', 'ń', 'o', 'ó', 'p', 'r', 's', 'ś', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'ź', 'ż']
 
+def zapisz(data, star_count, correct, incorrect):
+    data[2] = str(star_count)
+    cnt = ""
+    for i in correct:
+        cnt += i
+    data[3] = cnt
+    cnt = ""
+    for i in incorrect:
+        cnt += i
+    data[4] = cnt
+    zapis_gry.zapis(data[0], data)
+    print("Zapisano stan gry. \n")
+
 # funkcja, która sprawdza, czy litera jest w słowie
 def check_word(f_guess, f_word, f_fail_count, f_correct, f_incorrect, f_play, f_clue_index_list):
 
@@ -146,7 +160,7 @@ def check_word(f_guess, f_word, f_fail_count, f_correct, f_incorrect, f_play, f_
                     print(f_word)
                     print("Gratulacje - przeżyłeś!")
                     f_play = False
-                    
+
             # zgadywanej litery nie ma w słowie
             else:
                 f_incorrect.append(f_guess)
@@ -174,17 +188,16 @@ def check_word(f_guess, f_word, f_fail_count, f_correct, f_incorrect, f_play, f_
     return f_fail_count, f_correct, f_incorrect, f_play
 
 
-def game(word_, stars):
-    star_count = stars
-    #(dostosować do poziomów trudności odpowiednią ilość, po złączeniu plików- pewnie jako argument funkcji- ale to później)
-    word = word_[:-1]           #pominięcie znaku, który jest odczytywany z dokumentu 
-    correct = []
-    incorrect = []
+def game(mode, nick, word_, stars_, correct_=[], incorrect_=[], fail_count_=0):
+    star_count = stars_
+    word = word_[:-1].lower()
+    correct = correct_
+    incorrect = incorrect_
     clue_index_list = []
     play = True
-    fail_count = 0
-    # guess_count = 0        EW. DO STATYSTYK
-    
+    fail_count = fail_count_
+    data = [nick, word, star_count, correct, incorrect]
+
     # dodanie spacji do haseł, które mają więcej słów
     if " " in word:
         correct.append(" ")
@@ -194,30 +207,46 @@ def game(word_, stars):
                 clue_index_list.append(i)
             i += 1
 
+    if mode == "2":
+        print("Odgadnięte litery: " + str(correct) + "\n")
+        print("Błędne litery: " + str(incorrect) + "\n")
+        print("Słowo, które musisz odgadnąć:")
+        for underscore in word:
+            if underscore not in correct:
+                print("_ ", end=" ")
+            else:
+                print(underscore, end=" ")
+        print(" ")
+
+
     while (play is True) and (fail_count < 9):
+        print("Aby dokonać zapisu stanu gry kliknij:\t ss \n")
 
         # FUNKCJONALNOŚĆ - GWIAZDKA = PODPOWIEDŹ
         clue = False
         if star_count > 0:
-            print("Twoje hasło:")
-            for letter in word:
-                if letter in correct:
-                    print(letter, end=" ")
-                else:
-                    print("_ ", end=" ")
+            if mode == "1":
+                print("Twoje hasło:")
+                for letter in word:
+                    if letter in correct:
+                        print(letter, end=" ")
+                    else:
+                        print("_ ", end=" ")
             print(" ")
             print("Pozostałe podpowiedzi: " + ("* " * star_count))
-            answer = input("Czy chcesz skorzystać z podpowiedzi? (t/n): ")
+            answer = input("Czy chcesz skorzystać z gwiazdki? (t/n)")
             #zamieniłbym na: jeśli chcesz skorzystać z gwiazdki, wprowadź (np) znak
             # kropki- tak żeby nie musieć za każdym razem dawań n, kiedy sie nie chce
             if answer == "t":
                 # losowanie indeksu litery w słowie:
                 while not clue:
                     clue_index = random.randint(0, len(word) - 1)
-                    if clue_index not in clue_index_list:
+                    if answer == "ss":
+                        zapisz(data, star_count, correct, incorrect)
+                    elif clue_index not in clue_index_list:
                         clue_index_list.append(clue_index)
-                        result_clue = check_word(word[clue_index], word, fail_count, correct, incorrect, play, clue_index_list)  # funkcja czy w słowie
-                        print("Oto Twoja podpowiedź")
+                        result_clue= check_word(word[clue_index], word, fail_count, correct, incorrect, play, clue_index_list)  # funkcja czy w słowie
+                        print("Oto Twoja podpowiedź:")
                         for letter in word:
                             if letter in correct:
                                 print(letter, end=" ")
@@ -246,17 +275,16 @@ def game(word_, stars):
                     print("_ ", end=" ")
             print(" ")
             print("Skończyły Ci się podpowiedzi!")
-            #WAŻNE jeśli rozegrasz grę tak, żeby w momencie wygranej skończyły Ci się wszystkie gwaizdki, tj twoja ostatnia
-            #litera zostaje odsłonięta dzięki gwiazdce to gra się nie kończy- wyświetla się komunikat o braku gwiazdek i gra
-            #trwa dalej pomimo tego że hasło już zostało zgadnięte. Muszisz pokombinować z tymi elif, else if itd.
 
         # CIĄG DALSZY
         if clue is False:
             init_correct = len(correct)
             guess = input("Zgadnij literę lub hasło: ").lower()
-            if guess in alfabet or len(guess) > 1:
+            if guess == "ss":
+                zapisz(data, star_count, correct, incorrect)
+            elif guess in alfabet or len(guess) > 1:
                 result = check_word(guess, word, fail_count, correct, incorrect, play, clue_index_list)
-                                if init_correct < len(correct):
+                if init_correct < len(correct):
                     print("Dobrze, coraz mniej do zgadywania!")
                     for letter in word:
                         if letter in correct:
@@ -279,5 +307,9 @@ def game(word_, stars):
     if fail_count == 9:
         print("Przegrałeś!")
         print("Twoim hasłem było: ", word)
-   
+    else:
+        print("Udało Ci się!")
+        if mode == "2":
+            zapis_gry.zapis(nick, data)
+
     return 0
