@@ -221,6 +221,7 @@ def game(mode, nick, word_, stars_, correct_=[], incorrect_=[], fail_count_=0):
 
     while (play is True) and (fail_count < 9):
         print("Aby dokonać zapisu stanu gry kliknij:\t ss \n")
+        print("Aby wyjść z gry kliknij:\t qq\n")
 
         # FUNKCJONALNOŚĆ - GWIAZDKA = PODPOWIEDŹ
         clue = False
@@ -243,6 +244,8 @@ def game(mode, nick, word_, stars_, correct_=[], incorrect_=[], fail_count_=0):
                     clue_index = random.randint(0, len(word) - 1)
                     if answer == "ss":
                         zapisz(data, star_count, correct, incorrect)
+                    elif answer == "qq":
+                        return 0
                     elif clue_index not in clue_index_list:
                         clue_index_list.append(clue_index)
                         result_clue= check_word(word[clue_index], word, fail_count, correct, incorrect, play, clue_index_list)  # funkcja czy w słowie
@@ -262,6 +265,7 @@ def game(mode, nick, word_, stars_, correct_=[], incorrect_=[], fail_count_=0):
                         clue = True
             elif answer == "n":
                 clue = False
+
             else:
                 print("Podaj 't' lub 'n'.")
                 print("-" * 30)
@@ -282,6 +286,8 @@ def game(mode, nick, word_, stars_, correct_=[], incorrect_=[], fail_count_=0):
             guess = input("Zgadnij literę lub hasło: ").lower()
             if guess == "ss":
                 zapisz(data, star_count, correct, incorrect)
+            elif guess == "qq":
+                return 0
             elif guess in alfabet or len(guess) > 1:
                 result = check_word(guess, word, fail_count, correct, incorrect, play, clue_index_list)
                 if init_correct < len(correct):
