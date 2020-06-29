@@ -1,7 +1,7 @@
 # -*- coding: windows-1250 -*-
 import random
-from Projekt_W import zapis_gry
-
+import zapis_gry
+import statystyka
 # słownik z modelami szubienicy
 szubienica = {
 
@@ -189,6 +189,17 @@ def check_word(f_guess, f_word, f_fail_count, f_correct, f_incorrect, f_play, f_
 
 
 def game(mode, nick, word_, stars_, correct_=[], incorrect_=[], fail_count_=0):
+    stats_player = nick
+    stats_letters = len(word_)
+    stats_stars_used = False
+    if stars_ == 3:
+        stats_level = "łatwy"
+    elif stars_ == 2:
+        stats_level = "średni"
+    elif stars_ == 1:
+        stats_level = "trudny"
+    else:
+        raise ValueError
     star_count = stars_
     word = word_[:-1].lower()
     correct = correct_
@@ -196,13 +207,7 @@ def game(mode, nick, word_, stars_, correct_=[], incorrect_=[], fail_count_=0):
     clue_index_list = []
     play = True
     fail_count = fail_count_
-    cor = ""
-    for i in correct:
-        cor += i
-    incor = ""
-    for i in correct:
-        incor += i
-    data = [nick, word, str(star_count), cor, incor]
+    data = [nick, word, star_count, correct, incorrect]
 
     # dodanie spacji do haseł, które mają więcej słów
     if " " in word:
@@ -214,11 +219,7 @@ def game(mode, nick, word_, stars_, correct_=[], incorrect_=[], fail_count_=0):
             i += 1
 
     if mode == "2":
-        cor = ""
-        for litera in correct:
-            if litera != " ":
-                cor += "\'" + litera + "\'" + ' '
-        print("Odgadnięte litery: " + "[" + cor + "]\n")
+        print("Odgadnięte litery: " + str(correct) + "\n")
         print("Błędne litery: " + str(incorrect) + "\n")
         print("Słowo, które musisz odgadnąć:")
         for underscore in word:
@@ -249,12 +250,15 @@ def game(mode, nick, word_, stars_, correct_=[], incorrect_=[], fail_count_=0):
             #zamieniłbym na: jeśli chcesz skorzystać z gwiazdki, wprowadź (np) znak
             # kropki- tak żeby nie musieć za każdym razem dawań n, kiedy sie nie chce
             if answer == "t":
+                stats_stars_used = True
                 # losowanie indeksu litery w słowie:
                 while not clue:
                     clue_index = random.randint(0, len(word) - 1)
                     if answer == "ss":
+                        print("Gra zapisana, jednak nie będzię ona zaliczona do Twoich statystyk.")
                         zapisz(data, star_count, correct, incorrect)
                     elif answer == "qq":
+                        print("Wychodzisz z gry, twoje postępy nie zostaną zapisane.")
                         return 0
                     elif clue_index not in clue_index_list:
                         clue_index_list.append(clue_index)
@@ -321,11 +325,17 @@ def game(mode, nick, word_, stars_, correct_=[], incorrect_=[], fail_count_=0):
                 print("-" * 100)
 
     if fail_count == 9:
+        stats_win = 0
         print("Przegrałeś!")
-        print("Twoim hasłem było: ", word)
+        print("Twoim hasłem było: ", word)  
+        stats_mistakes = fail_count
     else:
+        stats_win = 1
+        stats_mistakes = fail_count
         print("Udało Ci się!")
         if mode == "2":
             zapis_gry.zapis(nick, data)
-
+    if mode =="1":
+        statystyka.calc_save_stats(stats_player,stats_win,stats_mistakes,stats_stars_used
+                               ,stats_letters,stats_level)
     return 0
