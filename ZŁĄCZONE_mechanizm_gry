@@ -196,7 +196,13 @@ def game(mode, nick, word_, stars_, correct_=[], incorrect_=[], fail_count_=0):
     clue_index_list = []
     play = True
     fail_count = fail_count_
-    data = [nick, word, star_count, correct, incorrect]
+    cor = ""
+    for i in correct:
+        cor += i
+    incor = ""
+    for i in correct:
+        incor += i
+    data = [nick, word, str(star_count), cor, incor]
 
     # dodanie spacji do haseł, które mają więcej słów
     if " " in word:
@@ -208,7 +214,11 @@ def game(mode, nick, word_, stars_, correct_=[], incorrect_=[], fail_count_=0):
             i += 1
 
     if mode == "2":
-        print("Odgadnięte litery: " + str(correct) + "\n")
+        cor = ""
+        for litera in correct:
+            if litera != " ":
+                cor += "\'" + litera + "\'" + ' '
+        print("Odgadnięte litery: " + "[" + cor + "]\n")
         print("Błędne litery: " + str(incorrect) + "\n")
         print("Słowo, które musisz odgadnąć:")
         for underscore in word:
