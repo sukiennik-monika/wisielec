@@ -1,9 +1,9 @@
 # -*- coding: windows-1250 -*-
 import os
-import wczytanie_hasel
-import mechanizm_gry
-import zapis_gry
-import statystyka as sts
+from Projekt_W import wczytanie_hasel
+from Projekt_W import mechanizm_gry
+from Projekt_W import zapis_gry
+# from Projekt_W import statystyka as sts
 
 
 clear = lambda: os.system('cls')  # IDLE nie czysci, terminal tak, do ustalnia co robimy// metoda z len(str)
@@ -15,9 +15,19 @@ def main():
         print("\n\n-------------------------MENU GŁÓWNE-------------------------")
         print(" 1- Nowa gra\n", "2- Wczytaj grę\n", "3- Statystki\n", "4- Zasady gry\n", "0- Wyjdź")
         number = str(input())
+
+
         if number == "1":  # nowa gra
             print("Wprowadź swoją nazwę- dzięki niej, będziesz mógł później wczytać grę lub zobaczyć swoje wyniki")
-            player = str(input())  # narazie gracze to "Player X"- za x wstaw 1-8
+            player = str(input())
+
+            zapisy = open("zapisy_gry.txt", 'r')
+            lines = zapisy.readlines()
+            zapisy.close()
+            while (player + "\n") in lines:
+                print("Ta nazwa jest juz zajęta! Podaj inną. \n")
+                player = str(input())
+
             word_star = wczytanie_hasel.load_word()  # funkcja zwraca krotkę (slowo,ilosc gwiazdek)
             word = word_star[0]
             star = word_star[1]
@@ -25,6 +35,7 @@ def main():
 
         elif number == "2":  # wczytaj gre
             profil = zapis_gry.wybor_profilu()
+            print(profil[0])
             mechanizm_gry.game("2", profil[0],profil[1],profil[2],profil[3], profil[4], profil[5])
 
         elif number == "3":  # statystki
@@ -44,7 +55,7 @@ def main():
             elif choice == 3:
                 sts.adv_stats()
             elif choice == 4:
-                sts.your_stats()
+                sts.your_stats(player)
             else:
                 break
         elif number == "4":
