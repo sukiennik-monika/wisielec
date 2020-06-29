@@ -1,9 +1,9 @@
 # -*- coding: windows-1250 -*-
 import os
-from Projekt_W import wczytanie_hasel
-from Projekt_W import mechanizm_gry
-from Projekt_W import zapis_gry
-# from Projekt_W import statystyka as sts
+import wczytanie_hasel
+import mechanizm_gry
+import zapis_gry
+import statystyka as sts
 
 
 clear = lambda: os.system('cls')  # IDLE nie czysci, terminal tak, do ustalnia co robimy// metoda z len(str)
@@ -55,7 +55,7 @@ def main():
             elif choice == 3:
                 sts.adv_stats()
             elif choice == 4:
-                sts.your_stats(player)
+                sts.your_stats()
             else:
                 break
         elif number == "4":
