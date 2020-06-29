@@ -74,9 +74,9 @@ def zapis(nickname, save):
     zapisy.close()
     line_index = 0
 
-    if (nickname ) in lines:
+    if (nickname) in lines:
         for line in lines:
-            if (nickname ) == line:
+            if (nickname) == line:
                 line_index = int(lines.index(line))
 
         lines = lines[:line_index] + lines[(line_index + 5):]
@@ -91,3 +91,22 @@ def zapis(nickname, save):
     zapisy = open("zapisy_gry.txt", "w")
     zapisy.writelines(lines)
     zapisy.close()
+
+def usun(nickname):
+    zapisy = open("zapisy_gry.txt", 'r')
+    lines = zapisy.readlines()
+    zapisy.close()
+    line_index = 0
+
+    if (nickname + "\n") in lines:
+        for line in lines:
+            if (nickname + "\n") == line:
+                line_index = int(lines.index(line))
+        lines = lines[:line_index] + lines[(line_index + 5):]
+        zapisy = open("zapisy_gry.txt", "w")
+        zapisy.writelines(lines)
+        zapisy.close()
+        print("Pomyślnie usunięto profil. \n")
+
+    else:
+        print("Błąd! Nie ma takiego profilu")
