@@ -64,7 +64,7 @@ def wybor_profilu():
     return [save_nick, save_word, save_stars, save_correct, save_incorrect, save_fail_count]
 
 def zapis(nickname, save):
-    n = [nickname]
+    #n = [nickname]
     if nickname is not save[0]:
         print("Brak zapisu o podanym nicku \n")
         raise ValueError
@@ -80,12 +80,12 @@ def zapis(nickname, save):
                 line_index = int(lines.index(line))
 
         lines = lines[:line_index] + lines[(line_index + 5):]
-        save = [line + "\n" for line in save if save.index(line) != 0]
-        lines += n + save
+        save = [line + "\n" for line in save]
+        lines += save
 
     else:
-        save = [line + "\n" for line in save if save.index(line) != 0]
-        lines += n + save
+        save = [line + "\n" for line in save]
+        lines += save
 
 
     zapisy = open("zapisy_gry.txt", "w")
