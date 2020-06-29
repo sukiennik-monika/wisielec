@@ -1,7 +1,8 @@
 # -*- coding: windows-1250 -*-
 import random
-
-# słownik z modelami szubienicy
+import zapis_gry
+import statystyka
+# sĹ‚ownik z modelami szubienicy
 szubienica = {
 
     0: """
@@ -106,86 +107,109 @@ szubienica = {
 
 }
 
-alfabet = ['a', 'ą', 'b', 'c', 'ć', 'd', 'e', 'ę', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'ł', 'm', 'n', 'ń', 'o', 'ó', 'p', 'r', 's', 'ś', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'ź', 'ż']
+alfabet = ['a', 'Ä…', 'b', 'c', 'Ä‡', 'd', 'e', 'Ä™', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'Ĺ‚', 'm', 'n', 'Ĺ„', 'o', 'Ăł', 'p', 'r', 's', 'Ĺ›', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'Ĺş', 'ĹĽ']
 
-# funkcja, która sprawdza, czy litera jest w słowie
+def zapisz(data, star_count, correct, incorrect):
+    data[2] = str(star_count)
+    cnt = ""
+    for i in correct:
+        cnt += i
+    data[3] = cnt
+    cnt = ""
+    for i in incorrect:
+        cnt += i
+    data[4] = cnt
+    zapis_gry.zapis(data[0], data)
+    print("Zapisano stan gry. \n")
+
+# funkcja, ktĂłra sprawdza, czy litera jest w sĹ‚owie
 def check_word(f_guess, f_word, f_fail_count, f_correct, f_incorrect, f_play, f_clue_index_list):
 
-    # jesli gracz odgadnął zadane słowo:
+    # jesli gracz odgadnÄ…Ĺ‚ zadane sĹ‚owo:
     if f_guess == f_word:
         print(f_word.upper())
-        print("Gratulacje - przeżyłeś!")
+        print("Gratulacje - przeĹĽyĹ‚eĹ›!")
         f_play = False                      # KONIEC GRY
 
-    # jeśli gracz wprowadził jedną literę:
+    # jeĹ›li gracz wprowadziĹ‚ jednÄ… literÄ™:
     elif len(f_guess) == 1:
 
-        # jeśli już wcześniej próbował odgadnąć tę literę:
+        # jeĹ›li juĹĽ wczeĹ›niej prĂłbowaĹ‚ odgadnÄ…Ä‡ tÄ™ literÄ™:
         if f_guess in f_correct or f_guess in f_incorrect:
-            print("Ta litera już była używana, spróbuj innaczej.")
-            # wypisanie liter, które były już poprzednio zgadywane:
-            print("\nTu pojawiają się podane przez Ciebie błędne litery i hasła: ", ", ".join(f_incorrect))
+            print("Ta litera juĹĽ byĹ‚a uĹĽywana, sprĂłbuj innaczej.")
+            # wypisanie liter, ktĂłre byĹ‚y juĹĽ poprzednio zgadywane:
+            print("\nTu pojawiajÄ… siÄ™ podane przez Ciebie bĹ‚Ä™dne litery i hasĹ‚a: ", ", ".join(f_incorrect))
             print("-" * 100)
 
-        # litera została wprowadzona po raz pierwszy
+        # litera zostaĹ‚a wprowadzona po raz pierwszy
         else:
-            # zgadywana litera jest w słowie
+            # zgadywana litera jest w sĹ‚owie
             if f_guess in f_word:
                 f_correct.append(f_guess)
-                # nie można zastosować wbudowanej funkcji .index(), bo zwraca ona indeks pierwszego napotkanego,
-                # znaku, a potrzebujemy indeksu każdej powtarzającej się litery
+                # nie moĹĽna zastosowaÄ‡ wbudowanej funkcji .index(), bo zwraca ona indeks pierwszego napotkanego,
+                # znaku, a potrzebujemy indeksu kaĹĽdej powtarzajÄ…cej siÄ™ litery
                 i = 0
                 for letter in f_word:
                     if letter == f_guess:
                         if i not in f_clue_index_list:
                             f_clue_index_list.append(i)
                     i += 1
-                # sprawdzenie czy odgadnięta litera sprawia, że odgadnięte zostało całe słowo
-                # w zbiorach kolejność nie ma znaczenia oraz elementy się nie powtarzają, stąd rzutowanie
+                # sprawdzenie czy odgadniÄ™ta litera sprawia, ĹĽe odgadniÄ™te zostaĹ‚o caĹ‚e sĹ‚owo
+                # w zbiorach kolejnoĹ›Ä‡ nie ma znaczenia oraz elementy siÄ™ nie powtarzajÄ…, stÄ…d rzutowanie
                 if set(f_word) == set(f_correct):
                     print(f_word)
-                    print("Gratulacje - przeżyłeś!")
+                    print("Gratulacje - przeĹĽyĹ‚eĹ›!")
                     f_play = False
 
-            # zgadywanej litery nie ma w słowie
+            # zgadywanej litery nie ma w sĹ‚owie
             else:
                 f_incorrect.append(f_guess)
                 f_fail_count += 1
-                print("Tej litery nie ma w Twoim słowie!")
+                print("Tej litery nie ma w Twoim sĹ‚owie!")
                 print(szubienica[f_fail_count])
-                # wypisanie liter, które były już poprzednio zgadywane:
-                print("\nTu pojawiają się podane przez Ciebie błędne litery i hasła: ", ", ".join(f_incorrect))
+                # wypisanie liter, ktĂłre byĹ‚y juĹĽ poprzednio zgadywane:
+                print("\nTu pojawiajÄ… siÄ™ podane przez Ciebie bĹ‚Ä™dne litery i hasĹ‚a: ", ", ".join(f_incorrect))
                 print("-" * 100)
 
-    # gracz wprowadził kilka liter, ale nie są one zadanym słowem
+    # gracz wprowadziĹ‚ kilka liter, ale nie sÄ… one zadanym sĹ‚owem
     else:
-        # jeśli już próbował odgadnąć taką kombinację
+        # jeĹ›li juĹĽ prĂłbowaĹ‚ odgadnÄ…Ä‡ takÄ… kombinacjÄ™
         if f_guess in f_correct or f_guess in f_incorrect:
-            print("Już próbowałeś odgadnąć to słowo, spróbuj inaczej.")
+            print("JuĹĽ prĂłbowaĹ‚eĹ› odgadnÄ…Ä‡ to sĹ‚owo, sprĂłbuj inaczej.")
         else:
             f_incorrect.append(f_guess)
             f_fail_count += 1
-            print("To nie to słowo!")
+            print("To nie to sĹ‚owo!")
             print(szubienica[f_fail_count])
-            # wypisanie liter, które były już poprzednio zgadywane:
-            print("\nTu pojawiają się podane przez Ciebie błędne litery i hasła: ", ", ".join(f_incorrect))
+            # wypisanie liter, ktĂłre byĹ‚y juĹĽ poprzednio zgadywane:
+            print("\nTu pojawiajÄ… siÄ™ podane przez Ciebie bĹ‚Ä™dne litery i hasĹ‚a: ", ", ".join(f_incorrect))
             print("-" * 100)
 
     return f_fail_count, f_correct, f_incorrect, f_play
 
 
-def game(word_, stars):
-    star_count = stars
-    #(dostosować do poziomów trudności odpowiednią ilość, po złączeniu plików- pewnie jako argument funkcji- ale to później)
-    word = word_[:-1]
-    correct = []
-    incorrect = []
+def game(mode, nick, word_, stars_, correct_=[], incorrect_=[], fail_count_=0):
+    stats_player = nick
+    stats_letters = len(word_)
+    stats_stars_used = False
+    if stars_ == 3:
+        stats_level = "Ĺ‚atwy"
+    elif stars_ == 2:
+        stats_level = "Ĺ›redni"
+    elif stars_ == 1:
+        stats_level = "trudny"
+    else:
+        raise ValueError
+    star_count = stars_
+    word = word_[:-1].lower()
+    correct = correct_
+    incorrect = incorrect_
     clue_index_list = []
     play = True
-    fail_count = 0
-    # guess_count = 0        EW. DO STATYSTYK
+    fail_count = fail_count_
+    data = [nick, word, star_count, correct, incorrect]
 
-    # dodanie spacji do haseł, które mają więcej słów
+    # dodanie spacji do haseĹ‚, ktĂłre majÄ… wiÄ™cej sĹ‚Ăłw
     if " " in word:
         correct.append(" ")
         i = 0
@@ -194,30 +218,52 @@ def game(word_, stars):
                 clue_index_list.append(i)
             i += 1
 
-    while (play is True) and (fail_count < 9):
+    if mode == "2":
+        print("OdgadniÄ™te litery: " + str(correct) + "\n")
+        print("BĹ‚Ä™dne litery: " + str(incorrect) + "\n")
+        print("SĹ‚owo, ktĂłre musisz odgadnÄ…Ä‡:")
+        for underscore in word:
+            if underscore not in correct:
+                print("_ ", end=" ")
+            else:
+                print(underscore, end=" ")
+        print(" ")
 
-        # FUNKCJONALNOŚĆ - GWIAZDKA = PODPOWIEDŹ
+
+    while (play is True) and (fail_count < 9):
+        print("Aby dokonaÄ‡ zapisu stanu gry kliknij:\t ss \n")
+        print("Aby wyjĹ›Ä‡ z gry kliknij:\t qq\n")
+
+        # FUNKCJONALNOĹšÄ† - GWIAZDKA = PODPOWIEDĹą
         clue = False
         if star_count > 0:
-            print("Twoje hasło:")
-            for letter in word:
-                if letter in correct:
-                    print(letter, end=" ")
-                else:
-                    print("_ ", end=" ")
+            if mode == "1":
+                print("Twoje hasĹ‚o:")
+                for letter in word:
+                    if letter in correct:
+                        print(letter, end=" ")
+                    else:
+                        print("_ ", end=" ")
             print(" ")
-            print("Pozostałe podpowiedzi: " + ("* " * star_count))
-            answer = input("Czy chcesz skorzystać z gwiazdki? (t/n)")
-            #zamieniłbym na: jeśli chcesz skorzystać z gwiazdki, wprowadź (np) znak
-            # kropki- tak żeby nie musieć za każdym razem dawań n, kiedy sie nie chce
+            print("PozostaĹ‚e podpowiedzi: " + ("* " * star_count))
+            answer = input("Czy chcesz skorzystaÄ‡ z gwiazdki? (t/n)")
+            #zamieniĹ‚bym na: jeĹ›li chcesz skorzystaÄ‡ z gwiazdki, wprowadĹş (np) znak
+            # kropki- tak ĹĽeby nie musieÄ‡ za kaĹĽdym razem dawaĹ„ n, kiedy sie nie chce
             if answer == "t":
-                # losowanie indeksu litery w słowie:
+                stats_stars_used = True
+                # losowanie indeksu litery w sĹ‚owie:
                 while not clue:
                     clue_index = random.randint(0, len(word) - 1)
-                    if clue_index not in clue_index_list:
+                    if answer == "ss":
+                        print("Gra zapisana, jednak nie bÄ™dziÄ™ ona zaliczona do Twoich statystyk.")
+                        zapisz(data, star_count, correct, incorrect)
+                    elif answer == "qq":
+                        print("Wychodzisz z gry, twoje postÄ™py nie zostanÄ… zapisane.")
+                        return 0
+                    elif clue_index not in clue_index_list:
                         clue_index_list.append(clue_index)
-                        result_clue= check_word(word[clue_index], word, fail_count, correct, incorrect, play, clue_index_list)  # funkcja czy w słowie
-                        print("Oto Twoja podpowiedź:")
+                        result_clue= check_word(word[clue_index], word, fail_count, correct, incorrect, play, clue_index_list)  # funkcja czy w sĹ‚owie
+                        print("Oto Twoja podpowiedĹş:")
                         for letter in word:
                             if letter in correct:
                                 print(letter, end=" ")
@@ -225,33 +271,38 @@ def game(word_, stars):
                                 print("_ ", end=" ")
                         print(" ")
                         print(szubienica[fail_count])
-                        # wypisanie liter, które były już poprzednio zgadywane:
-                        print("\nTu pojawiają się podane przez Ciebie błędne litery i hasła: ", ", ".join(incorrect))
+                        # wypisanie liter, ktĂłre byĹ‚y juĹĽ poprzednio zgadywane:
+                        print("\nTu pojawiajÄ… siÄ™ podane przez Ciebie bĹ‚Ä™dne litery i hasĹ‚a: ", ", ".join(incorrect))
                         print("-" * 100)
                         star_count -= 1
                         play = result_clue[3]
                         clue = True
             elif answer == "n":
                 clue = False
+
             else:
                 print("Podaj 't' lub 'n'.")
                 print("-" * 30)
                 clue = True
         else:
-            print("Twoje hasło:")
+            print("Twoje hasĹ‚o:")
             for letter in word:
                 if letter in correct:
                     print(letter, end=" ")
                 else:
                     print("_ ", end=" ")
             print(" ")
-            print("Skończyły Ci się podpowiedzi!")
+            print("SkoĹ„czyĹ‚y Ci siÄ™ podpowiedzi!")
 
-        # CIĄG DALSZY
+        # CIÄ„G DALSZY
         if clue is False:
             init_correct = len(correct)
-            guess = input("Zgadnij literę lub hasło: ").lower()
-            if guess in alfabet or len(guess) > 1:
+            guess = input("Zgadnij literÄ™ lub hasĹ‚o: ").lower()
+            if guess == "ss":
+                zapisz(data, star_count, correct, incorrect)
+            elif guess == "qq":
+                return 0
+            elif guess in alfabet or len(guess) > 1:
                 result = check_word(guess, word, fail_count, correct, incorrect, play, clue_index_list)
                 if init_correct < len(correct):
                     print("Dobrze, coraz mniej do zgadywania!")
@@ -262,21 +313,29 @@ def game(word_, stars):
                             print("_ ", end=" ")
                     print(" ")
                     print(szubienica[fail_count])
-                    # wypisanie liter, które były już poprzednio zgadywane:
-                    print("\nTu pojawiają się podane przez Ciebie błędne litery i hasła: ", ", ".join(incorrect))
+                    # wypisanie liter, ktĂłre byĹ‚y juĹĽ poprzednio zgadywane:
+                    print("\nTu pojawiajÄ… siÄ™ podane przez Ciebie bĹ‚Ä™dne litery i hasĹ‚a: ", ", ".join(incorrect))
                     print("-" * 100)
                 play = result[3]
                 fail_count = result[0]
-                correct = result[1]             #nie musi w sumie tego być
-                incorrect = result[2]           #nie musi w sumie tego być
+                correct = result[1]             #nie musi w sumie tego byÄ‡
+                incorrect = result[2]           #nie musi w sumie tego byÄ‡
             elif len(guess) == 1:
                 print("Nie podano litery")
                 print("-" * 100)
 
     if fail_count == 9:
-        print("Przegrałeś!")
-        print("Twoim hasłem było: ", word)
-    '''else:
-        print("Udało Ci się!")'''
-
+        stats_win = 0
+        print("PrzegraĹ‚eĹ›!")
+        print("Twoim hasĹ‚em byĹ‚o: ", word)  
+        stats_mistakes = fail_count
+    else:
+        stats_win = 1
+        stats_mistakes = fail_count
+        print("UdaĹ‚o Ci siÄ™!")
+        if mode == "2":
+            zapis_gry.zapis(nick, data)
+    if mode =="1":
+        statystyka.calc_save_stats(stats_player,stats_win,stats_mistakes,stats_stars_used
+                               ,stats_letters,stats_level)
     return 0
