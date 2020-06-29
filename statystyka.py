@@ -51,7 +51,7 @@ def append_list_as_row(file_name, list_of_elem):
         # Add contents of list as last row in the csv file
         csv_writer.writerow(list_of_elem)
 
-def calc_save_stats(player='ja', win=1, mistakes=4, star_used=True, letters=9,level='średni'):
+def calc_save_stats(player, win, mistakes, star_used, letters,level):
     data = pd.read_csv('npg_test.csv', header=0)
     # obliczanie pkt za grę
     points = 5 * letters
@@ -85,7 +85,9 @@ def calc_save_stats(player='ja', win=1, mistakes=4, star_used=True, letters=9,le
         dane_do_zapisu = [stat[0],1,stat[1],stat[1]*100,stat[2],stat[2],stat[3]]
         append_list_as_row('npg_test.csv', dane_do_zapisu)
 
-calc_save_stats()
+
+
+
 
 
 
