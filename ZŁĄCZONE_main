@@ -13,7 +13,7 @@ def main():
     number = " "
     while number != "0":
         print("\n\n-------------------------MENU GŁÓWNE-------------------------")
-        print(" 1- Nowa gra\n", "2- Wczytaj grę\n", "3- Statystki\n", "4- Zasady gry\n", "0- Wyjdź")
+        print(" 1- Nowa gra\n", "2- Wczytaj grę\n", "3- Statystki\n", "4- Zasady gry\n", "5- Usuń zapis\n", "0- Wyjdź")
         number = str(input())
 
 
@@ -66,6 +66,9 @@ def main():
                   ,
                   "3. Musisz jednak uważać - w rogu, z każdą nieudaną próbą odgadnięcia litery,\n\tpojawia się kolejna część rysunku szubienicy. Jeśli przekroczysz dozwoloną liczbę prób - zawiśniesz!\n\tNie dopuść do tego.")
             clear()
+        elif number == "5":
+            nick = input("Podaj nazwę profilu do usunięcia.\n")
+            zapis_gry.usun(nick)
         elif number != "0":
             print("Nieprawidłowy znak")
 
