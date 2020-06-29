@@ -257,6 +257,7 @@ def game(mode, nick, word_, stars_, correct_=[], incorrect_=[], fail_count_=0):
                     if answer == "ss":
                         print("Gra zapisana, jednak nie będzię ona zaliczona do Twoich statystyk.")
                         zapisz(data, star_count, correct, incorrect)
+                        return 0
                     elif answer == "qq":
                         print("Wychodzisz z gry, twoje postępy nie zostaną zapisane.")
                         return 0
@@ -327,7 +328,7 @@ def game(mode, nick, word_, stars_, correct_=[], incorrect_=[], fail_count_=0):
     if fail_count == 9:
         stats_win = 0
         print("Przegrałeś!")
-        print("Twoim hasłem było: ", word)  
+        print("Twoim hasłem było: ", word)
         stats_mistakes = fail_count
     else:
         stats_win = 1
